@@ -35,7 +35,10 @@ export default {
     signupUser: function () {
       firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPass)
         .then(user => {
-          alert('Create account', user.name)
+          firebase.auth().currentUser.updateProfile({
+            displayName: this.userName
+          })
+          this.$store.commit('adduserName', this.userName)
         })
         .catch(error => {
           alert(error.message)
