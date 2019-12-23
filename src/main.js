@@ -5,7 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 // import firebase from 'firebase'
-import { plugins } from './plugins/firebase'
+import './plugins/firebase'
 
 Vue.config.productionTip = false
 
@@ -15,7 +15,6 @@ new Vue({
   el: '#app',
   router,
   store,
-  plugins,
   components: { App },
   template: '<App/>'
 })
