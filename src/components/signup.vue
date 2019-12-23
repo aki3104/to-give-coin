@@ -38,7 +38,9 @@ export default {
           firebase.auth().currentUser.updateProfile({
             displayName: this.userName
           })
+          console.log(firebase.auth().currentUser.displayName)
           this.$store.commit('adduserName', this.userName)
+          this.$router.push('/HelloWorld')
         })
         .catch(error => {
           alert(error.message)
