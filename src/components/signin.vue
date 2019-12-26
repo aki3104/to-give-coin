@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>ログイン</h1>
-    <ul class="signup">
+    <ul class="signin">
       <li>
         <label for="userEmail">メールアドレス</label>
         <input type="text" id="userEmail" placeholder="E-mail" v-model="userEmail">
@@ -10,7 +10,7 @@
         <label for="userPass">パスワード</label>
         <input type="password" id="userPass" placeholder="Password" v-model="userPass">
       </li>
-    <button id="signupBtn" @click="signupUser">ログイン</button>
+    <button id="signinBtn" @click="signInUser">ログイン</button>
     </ul>
     <router-link to="/signup">新規登録はこちら</router-link>
   </div>
@@ -19,7 +19,7 @@
 <script>
 import firebase from 'firebase'
 export default {
-  name: 'signup',
+  name: 'signin',
   data () {
     return {
       userName: '',
@@ -28,13 +28,15 @@ export default {
     }
   },
   methods: {
-    signupUser: function () {
-      firebase.auth().createUserWithEmailAndPassword(this.userEmail, this.userPass)
-        .then(user => {
-        })
-        .catch(error => {
-          alert(error.message)
-        })
+    signInUser: function () {
+      firebase.auth().signInWithEmailAndPassword(this.userEmail, this.userPass).then(
+        user => {
+          this.$router.push('/HelloWorld')
+        },
+        err => {
+          alert(err.message)
+        }
+      )
     }
   }
 }
