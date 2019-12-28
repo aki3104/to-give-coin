@@ -1,17 +1,35 @@
 <template>
-  <ul class="loginUser">
-    <li id="loginName">{{ loginName }}さんようこそ！!</li>
-    <li id="userWallet">残高 : {{ userWallet }}</li>
-  </ul>
+  <div class="container">
+    <ul class="loginUser">
+      <li id="loginName">{{ loginUserName }}さんようこそ！!</li>
+      <li id="userWallet">残高 : {{ userWallet }}</li>
+    </ul>
+    <h1>ユーザ一覧</h1>
+  </div>
 </template>
 
 <script>
+import firebase from 'firebase'
+
 export default {
   name: 'loginUser',
   data () {
     return {
-      loginName: 'test',
+      loginName: '',
       userWallet: '500'
+    }
+  },
+  methods: {
+  },
+  computed: {
+    loginUserName: function () {
+      firebase.auth().onAuthStateChanged(user => {
+        if (user) {
+          this.$store.commit('setLoginUser', user)
+        } else {
+        }
+      })
+      return this.$store.state.loginUserName
     }
   }
 }
@@ -27,14 +45,12 @@ ul{
 }
 
 #loginName{
-  background-color: pink;
-  width: 200px;
+  flex: 1;
+  text-align: left;
 }
 
 #userWallet{
-  background-color: skyblue;
-  flex: 1;
-  text-align: right;
-  padding-right: 30px;
+  width: 150px;
+  text-align: center;
 }
 </style>
