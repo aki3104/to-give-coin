@@ -3,6 +3,7 @@
     <ul class="loginUser">
       <li id="loginName">{{ loginUserName }}さんようこそ！!</li>
       <li id="userWallet">残高 : {{ userWallet }}</li>
+      <li><button id="logout" @click="logoutUser">ログアウト</button></li>
     </ul>
     <h1>ユーザ一覧</h1>
   </div>
@@ -20,6 +21,11 @@ export default {
     }
   },
   methods: {
+    logoutUser () {
+      firebase.auth().signOut()
+      this.$router.push('/')
+      this.$store.commit('deleUserName')
+    }
   },
   computed: {
     loginUserName: function () {
