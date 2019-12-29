@@ -31,7 +31,6 @@ export default {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           this.$store.commit('setLoginUser', user)
-        } else {
         }
       })
       return this.$store.state.loginUserName
