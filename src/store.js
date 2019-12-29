@@ -15,6 +15,9 @@ export default new Vuex.Store({
     },
     setLoginUser (state, user) {
       state.loginUserName = user.displayName
+    },
+    deleUserName (state) {
+      state.loginUserName = ''
     }
   },
   actions: {

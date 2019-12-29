@@ -24,6 +24,7 @@ export default {
     logoutUser () {
       firebase.auth().signOut()
       this.$router.push('/')
+      this.$store.commit('deleUserName')
     }
   },
   computed: {
