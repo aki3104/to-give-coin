@@ -38,7 +38,6 @@ export default {
           firebase.auth().currentUser.updateProfile({
             displayName: this.userName
           })
-          this.$store.commit('adduserName', this.userName)
           this.$router.push('/dashboard')
         })
         .catch(error => {
