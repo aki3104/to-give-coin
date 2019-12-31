@@ -6,35 +6,36 @@
       <li><button id="logout" @click="logoutUser">ログアウト</button></li>
     </ul>
     <h1>ユーザ一覧</h1>
+    <ul>
+      <li></li>
+    </ul>
   </div>
 </template>
 
 <script>
-import firebase from 'firebase'
-
+// import { mapActions } from 'vuex'
 export default {
   name: 'loginUser',
   data () {
     return {
       loginName: '',
-      userWallet: '500'
+      userWallet: '1000'
     }
   },
   methods: {
-    logoutUser () {
-      firebase.auth().signOut()
+    loginUser: function () {
+    },
+    logoutUser: function () {
+      this.$store.commit('signOutUser')
       this.$router.push('/')
-      this.$store.commit('deleUserName')
     }
+    // ...mapActions(['addUser'])
   },
   computed: {
     loginUserName: function () {
-      firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          this.$store.commit('setLoginUser', user)
-        }
-      })
-      return this.$store.state.loginUserName
+      this.$store.commit('setLoginUser')
+      console.log(this.$store.state.loginUser)
+      return this.$store.state.loginUser.displayName
     }
   }
 }

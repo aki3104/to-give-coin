@@ -16,4 +16,3 @@ let firebaseConfig = {
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
-console.log('test')
