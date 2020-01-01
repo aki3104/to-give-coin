@@ -7,13 +7,15 @@
     </ul>
     <h1>ユーザ一覧</h1>
     <ul>
-      <li></li>
+      <li>{{ fetchUseres }}</li>
     </ul>
+    <button @click="fetchUser">test</button>
   </div>
 </template>
 
 <script>
-// import { mapActions } from 'vuex'
+import { mapActions } from 'vuex'
+
 export default {
   name: 'loginUser',
   data () {
@@ -23,19 +25,24 @@ export default {
     }
   },
   methods: {
-    loginUser: function () {
-    },
     logoutUser: function () {
       this.$store.commit('signOutUser')
       this.$router.push('/')
-    }
-    // ...mapActions(['addUser'])
+    },
+    ...mapActions(['fetchUser'])
   },
   computed: {
     loginUserName: function () {
-      this.$store.commit('setLoginUser')
-      console.log(this.$store.state.loginUser)
-      return this.$store.state.loginUser.displayName
+      if (this.$store.state.loginUser.displayName === undefined) {
+        this.$store.commit('setLoginUser', this.userWallet)
+        // console.log(this.$store.state.loginUser.displayName)
+      } else {
+        // console.log('else')
+        return this.$store.state.loginUser.displayName
+      }
+    },
+    fetchUseres: function () {
+      return this.$store.state.displayUser
     }
   }
 }
