@@ -6,43 +6,80 @@
       <li><button id="logout" @click="logoutUser">ログアウト</button></li>
     </ul>
     <h1>ユーザ一覧</h1>
-    <ul>
-      <li>{{ fetchUseres }}</li>
+    <ul v-for='item in fetchUseres' :key='item.userName'>
+      <li id="NameList">{{ item.userName }}</li>
+      <li id="WolletList"><button @click="openWallet">Walletを見る</button></li>
+      <li id="WolletList"><button @click="openSent">送る</button></li>
     </ul>
-    <button @click="fetchUser">test</button>
+
+    <displaywallet v-if="displaywallet">
+      <!-- default スロットコンテンツ -->
+      <div>残高</div>
+      <div>{{ userWallet }}円</div>
+      <!-- /default -->
+      <!-- footer スロットコンテンツ -->
+      <template slot="footer">
+        <button @click="closeWallet">閉じる</button>
+      </template>
+      <!-- /footer -->
+    </displaywallet>
+
+    <displaysent @close="closeSent" v-if="displaysent">
+      <!-- default スロットコンテンツ -->
+      <p>{{ loginUserName }}さんの残高：{{ userWallet }}</p>
+      <div><input></div>
+      <!-- /default -->
+      <!-- footer スロットコンテンツ -->
+      <template slot="footer">
+        <button>送信</button>
+      </template>
+      <!-- /footer -->
+    </displaysent>
   </div>
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import displaywallet from './displaywallet.vue'
+import displaysent from './displaysent.vue'
 
 export default {
   name: 'loginUser',
+  components: {displaywallet, displaysent},
   data () {
     return {
-      loginName: '',
-      userWallet: '1000'
+      userWallet: '1000',
+      displaywallet: false,
+      displaysent: false
     }
+  },
+  created () {
+    this.$store.commit('setLoginUser', this.userWallet)
+    this.$store.dispatch('fetchUser')
   },
   methods: {
     logoutUser: function () {
       this.$store.commit('signOutUser')
       this.$router.push('/')
     },
-    ...mapActions(['fetchUser'])
+    openWallet () {
+      this.displaywallet = true
+    },
+    closeWallet () {
+      this.displaywallet = false
+    },
+    openSent () {
+      this.displaysent = true
+    },
+    closeSent () {
+      this.displaysent = false
+    }
   },
   computed: {
     loginUserName: function () {
-      if (this.$store.state.loginUser.displayName === undefined) {
-        this.$store.commit('setLoginUser', this.userWallet)
-        // console.log(this.$store.state.loginUser.displayName)
-      } else {
-        // console.log('else')
-        return this.$store.state.loginUser.displayName
-      }
+      return this.$store.state.loginUser.displayName
     },
     fetchUseres: function () {
-      return this.$store.state.displayUser
+      return this.$store.getters.filterdUseres
     }
   }
 }
@@ -65,5 +102,19 @@ ul{
 #userWallet{
   width: 150px;
   text-align: center;
+}
+
+#NameList{
+  width: 100px;
+  text-align: center;
+}
+
+#NameList{
+  flex: 0.8;
+  text-align: left;
+}
+
+#sent{
+  margin-left: 20px
 }
 </style>

@@ -6,15 +6,16 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loginUser: '',
-    displayUser: []
+    displayUseres: []
   },
   mutations: {
     // -----cloud firestoreへデータを格納
     setLoginUser (state, userWallet) {
+      const db = firebase.firestore()
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           state.loginUser = user
-          firebase.firestore().collection(`users/${state.loginUser.displayName}/user`).add({
+          db.collection('users').doc(user.displayName).set({
             userName: user.displayName,
             userWollet: userWallet
           })
@@ -23,20 +24,20 @@ export default new Vuex.Store({
     },
     // -----cloud firestoreからデータを取得
     fetchUser (state) {
-      firebase.firestore().collection(`users/${state.loginUser.displayName}/user`)
-        // .where('users', '==', 'aki310')
+      firebase.firestore().collection(`users`)
         .get()
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
             // console.log(`${doc.id} => ${doc.data()}`)
-            state.displayUser.push(doc.data())
-            console.log(state.displayUser)
+            state.displayUseres.push(doc.data())
           })
+          console.log(state.displayUseres)
         })
     },
     signOutUser (state) {
       firebase.auth().signOut()
       state.loginUser = ''
+      state.displayUseres = ''
     }
   },
   actions: {
@@ -46,14 +47,12 @@ export default new Vuex.Store({
     }
   },
   getters: {
-    filterdList: state => {
-      return state.displayUser.filter(user => {
-        if (user.userName !== state.loginUser.displayName) {
-          return user
-        } else {
-          console.log(state.displayUser)
-        }
-      })
+    filterdUseres: state => {
+      return state.displayUseres.filter(displayUser =>
+        // console.log(displayUser.userName)
+        // console.log(state.loginUser)
+        displayUser.userName !== state.loginUser.displayName
+      )
     }
   }
 })
