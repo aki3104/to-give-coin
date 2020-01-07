@@ -6,20 +6,28 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     loginUser: '',
-    displayUseres: []
+    initWallet: 1000,
+    displayUseres: [],
+    displaymodalName: '',
+    displaymodalWallet: ''
   },
   mutations: {
-    // -----cloud firestoreへデータを格納
-    setLoginUser (state, userWallet) {
-      const db = firebase.firestore()
+    // -----ログインユーザーの取得
+    setLoginUser (state) {
       firebase.auth().onAuthStateChanged(user => {
         if (user) {
           state.loginUser = user
-          db.collection('users').doc(user.displayName).set({
-            userName: user.displayName,
-            userWollet: userWallet
-          })
+        } else {
+          console.log('データがない')
         }
+      })
+    },
+    // -----signupからcloud firestoreへデータを格納
+    setFirebaseStore (state, displayName) {
+      const db = firebase.firestore()
+      db.collection('users').doc(displayName).set({
+        userName: displayName,
+        userWallet: state.initWallet
       })
     },
     // -----cloud firestoreからデータを取得
@@ -31,28 +39,37 @@ export default new Vuex.Store({
             // console.log(`${doc.id} => ${doc.data()}`)
             state.displayUseres.push(doc.data())
           })
-          console.log(state.displayUseres)
         })
     },
     signOutUser (state) {
       firebase.auth().signOut()
       state.loginUser = ''
-      state.displayUseres = ''
+      state.displayUseres = []
+    },
+    displaymodal: (state, modal) => {
+      state.displaymodalName = modal.name
+      state.displaymodalWallet = modal.wallet
     }
   },
   actions: {
     fetchUser ({ commit }) {
-      console.log('testactions')
       commit('fetchUser')
     }
   },
   getters: {
     filterdUseres: state => {
       return state.displayUseres.filter(displayUser =>
-        // console.log(displayUser.userName)
-        // console.log(state.loginUser)
         displayUser.userName !== state.loginUser.displayName
       )
+    },
+    loginUserWallet: state => {
+      let dbUser = state.displayUseres.filter(displayUser =>
+        displayUser.userName === state.loginUser.displayName
+      )
+      if (dbUser[0]) {
+        // console.log(dbUser[0].userWallet)
+        return dbUser[0].userWallet
+      }
     }
   }
 })

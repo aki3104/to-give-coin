@@ -2,39 +2,42 @@
   <div class="container">
     <ul class="loginUser">
       <li id="loginName">{{ loginUserName }}さんようこそ！!</li>
-      <li id="userWallet">残高 : {{ userWallet }}</li>
+      <li id="userWallet">残高 : {{ loginUserWallet }}</li>
       <li><button id="logout" @click="logoutUser">ログアウト</button></li>
     </ul>
     <h1>ユーザ一覧</h1>
     <ul v-for='item in fetchUseres' :key='item.userName'>
       <li id="NameList">{{ item.userName }}</li>
-      <li id="WolletList"><button @click="openWallet">Walletを見る</button></li>
-      <li id="WolletList"><button @click="openSent">送る</button></li>
+      <li id="WalletList"><button @click="openWallet(item.userName, item.userWallet)">Walletを見る</button></li>
+      <li id="WalletList"><button @click="openSent">送る</button></li>
+        <!-- component
+        displaywalletの<slot/>に挿入される分 -->
+        <displaywallet v-if="displaywallet">
+          <!-- default スロットコンテンツ -->
+          <p>{{ $store.state.displaymodalName }}さんの残高</p>
+          <p>{{ $store.state.displaymodalWallet }}円</p>
+          <!-- /default -->
+          <!-- footer スロットコンテンツ -->
+          <template slot="footer">
+            <button @click="closeWallet">閉じる</button>
+          </template>
+          <!-- /footer -->
+        </displaywallet>
+         <!-- component
+         displaysentの<slot/>に挿入される分-->
+        <displaysent @close="closeSent" v-if="displaysent">
+          <!-- default スロットコンテンツ -->
+          <p>あなたの残高：{{ loginUserWallet }}</p>
+          <p>送る金額</p>
+          <div><input></div>
+          <!-- /default -->
+          <!-- footer スロットコンテンツ -->
+          <template slot="footer">
+            <button>送信</button>
+          </template>
+          <!-- /footer -->
+        </displaysent>
     </ul>
-
-    <displaywallet v-if="displaywallet">
-      <!-- default スロットコンテンツ -->
-      <div>残高</div>
-      <div>{{ userWallet }}円</div>
-      <!-- /default -->
-      <!-- footer スロットコンテンツ -->
-      <template slot="footer">
-        <button @click="closeWallet">閉じる</button>
-      </template>
-      <!-- /footer -->
-    </displaywallet>
-
-    <displaysent @close="closeSent" v-if="displaysent">
-      <!-- default スロットコンテンツ -->
-      <p>{{ loginUserName }}さんの残高：{{ userWallet }}</p>
-      <div><input></div>
-      <!-- /default -->
-      <!-- footer スロットコンテンツ -->
-      <template slot="footer">
-        <button>送信</button>
-      </template>
-      <!-- /footer -->
-    </displaysent>
   </div>
 </template>
 
@@ -44,16 +47,18 @@ import displaysent from './displaysent.vue'
 
 export default {
   name: 'loginUser',
-  components: {displaywallet, displaysent},
+  components: {
+    displaywallet,
+    displaysent
+  },
   data () {
     return {
-      userWallet: '1000',
       displaywallet: false,
       displaysent: false
     }
   },
   created () {
-    this.$store.commit('setLoginUser', this.userWallet)
+    this.$store.commit('setLoginUser')
     this.$store.dispatch('fetchUser')
   },
   methods: {
@@ -61,8 +66,12 @@ export default {
       this.$store.commit('signOutUser')
       this.$router.push('/')
     },
-    openWallet () {
+    openWallet: function (userName, userWallet) {
       this.displaywallet = true
+      this.$store.commit('displaymodal', {
+        name: userName,
+        wallet: userWallet
+      })
     },
     closeWallet () {
       this.displaywallet = false
@@ -77,6 +86,9 @@ export default {
   computed: {
     loginUserName: function () {
       return this.$store.state.loginUser.displayName
+    },
+    loginUserWallet: function () {
+      return this.$store.getters.loginUserWallet
     },
     fetchUseres: function () {
       return this.$store.getters.filterdUseres
