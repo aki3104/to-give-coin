@@ -25,9 +25,11 @@
     z-index: 30;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
+    width: 300px;
+    height: 300px;
+    // background: #c8c8c8;
+    // opacity: 0.5;
+    background: rgba(0,0,0,0.5);
   }
 
   &-window {
@@ -41,7 +43,7 @@
   }
 
   &-footer {
-    background: #ccc;
+    background: rgba(200, 200, 200, 0.3);
     padding: 10px;
     text-align: right;
   }

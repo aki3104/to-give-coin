@@ -12,32 +12,32 @@
       <li id="WalletList"><button @click="openSent">送る</button></li>
         <!-- component
         displaywalletの<slot/>に挿入される分 -->
-        <displaywallet v-if="displaywallet">
-          <!-- default スロットコンテンツ -->
-          <p>{{ $store.state.displaymodalName }}さんの残高</p>
-          <p>{{ $store.state.displaymodalWallet }}円</p>
-          <!-- /default -->
-          <!-- footer スロットコンテンツ -->
-          <template slot="footer">
-            <button @click="closeWallet">閉じる</button>
-          </template>
-          <!-- /footer -->
-        </displaywallet>
-         <!-- component
-         displaysentの<slot/>に挿入される分-->
-        <displaysent @close="closeSent" v-if="displaysent">
-          <!-- default スロットコンテンツ -->
-          <p>あなたの残高：{{ loginUserWallet }}</p>
-          <p>送る金額</p>
-          <div><input></div>
-          <!-- /default -->
-          <!-- footer スロットコンテンツ -->
-          <template slot="footer">
-            <button>送信</button>
-          </template>
-          <!-- /footer -->
-        </displaysent>
     </ul>
+      <displaywallet v-if="displaywallet">
+        <!-- default スロットコンテンツ -->
+        <p>{{ $store.state.displaymodalName }}さんの残高</p>
+        <p>{{ $store.state.displaymodalWallet }}円</p>
+        <!-- /default -->
+        <!-- footer スロットコンテンツ -->
+        <template slot="footer">
+          <button @click="closeWallet">閉じる</button>
+        </template>
+        <!-- /footer -->
+      </displaywallet>
+        <!-- component
+        displaysentの<slot/>に挿入される分-->
+      <displaysent @close="closeSent" v-if="displaysent">
+        <!-- default スロットコンテンツ -->
+        <p>あなたの残高：{{ loginUserWallet }}</p>
+        <p>送る金額</p>
+        <div><input></div>
+        <!-- /default -->
+        <!-- footer スロットコンテンツ -->
+        <template slot="footer">
+          <button>送信</button>
+        </template>
+        <!-- /footer -->
+      </displaysent>
   </div>
 </template>
 
