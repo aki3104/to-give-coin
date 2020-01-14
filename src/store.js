@@ -15,8 +15,10 @@ export default new Vuex.Store({
     // -----ログインユーザーの取得
     setLoginUser (state) {
       firebase.auth().onAuthStateChanged(user => {
-        if (user) {
-          state.loginUser = user
+        console.log(user)
+        if (user.displayName) {
+          state.loginUser = user.displayName
+          console.log(state.loginUser)
         } else {
           console.log('データがない')
         }
@@ -59,12 +61,12 @@ export default new Vuex.Store({
   getters: {
     filterdUseres: state => {
       return state.displayUseres.filter(displayUser =>
-        displayUser.userName !== state.loginUser.displayName
+        displayUser.userName !== state.loginUser
       )
     },
     loginUserWallet: state => {
       let dbUser = state.displayUseres.filter(displayUser =>
-        displayUser.userName === state.loginUser.displayName
+        displayUser.userName === state.loginUser
       )
       if (dbUser[0]) {
         // console.log(dbUser[0].userWallet)

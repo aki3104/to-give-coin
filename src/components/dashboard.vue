@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     loginUserName: function () {
-      return this.$store.state.loginUser.displayName
+      return this.$store.state.loginUser
     },
     loginUserWallet: function () {
       return this.$store.getters.loginUserWallet
